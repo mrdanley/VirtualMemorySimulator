@@ -1,12 +1,50 @@
+import java.util.Map;
+import java.util.HashMap;
+
 public class TLBCache{
   private final int TLB_SIZE = 8;
-  private TLBEntry[] tlb;
+  private TLBEntry[] tlbEntries;
+  private int swapPtr;//keeps track of
+  private int stackPtr;//keeps track of filled area
 
   public TLBCache(){
-    tlb = new TLBEntry[TLB_SIZE];
+    tlbEntries = new TLBEntry[TLB_SIZE];
+    swapPtr = 0;
+    stackPtr = 0;
+  }
+  public int getTLBEntryIndex(String vpn){
+    for(int i=0;i<stackPtr;i++){
+      //check valid bit
+      if(tlbEntries[i].getValid()!=0){
+        //check virtual page #
+        if(tlbEntries[i].getVirtualPage().equals(vpn)){
+          return i;
+        }
+      }
+    }
+    return -1;
   }
   public TLBEntry getTLBEntry(int index){
-    return tlb[index];
+    return tlbEntries[i];
+  }
+  public int getStackPtr(){
+    return stackPtr;
+  }
+  public void incrStackPtr(){
+    stackPtr++;
+  }
+  public int getSwapPtr(){
+    return swapPtr;
+  }
+  public void setSwapPtr(int ptr){
+    swapPtr = ptr;
+  }
+  public TLBEntry[] getTLBEntries(){
+    return tlbEntries;
+  }
+  public boolean isFull(){
+    if(stackPtr==tlbEntries.length) return true;
+    else return false;
   }
 }
 
