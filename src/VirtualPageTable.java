@@ -1,26 +1,40 @@
 public class VirtualPageTable{
-  private PageTableEntry[] vpt; //VirtualPage# as indices
-  //table entry - V | R | D | PageFrame#
+  private PTEntry[] ptEntries;
+  private int stackPtr, clockPtr;
 
   public VirtualPageTable(){
-    vpt = new PageTableEntry[64];
+    ptEntries = new PTEntry[64];
+    stackPtr = 0;
+    clockPtr = 0;
   }
-  public PageTableEntry getPTE(int index){
-    return vpt[index];
+  public PTEntry[] getPTEntries(){
+    return ptEntries;
   }
-  
+  public PTEntry getPTEntry(int index){
+    if(ptEntries[index].getValid()==1)
+      return ptEntries[index];
+    else{
+      return null;
+    }
+  }
+  public int getClockPtr(){
+    return clockPtr;
+  }
+  public void setClockPtr(int ptr){
+    clockPtr = ptr;
+  }
 }
 
-class PageTableEntry{
+class PTEntry{
   private int validBit;
   private int refBit;
   private int dirtyBit;
   private String pageFrameNum;
 
-  public PageTableEntry(){
+  public PTEntry(){
     this(0,0,0,"");
   }
-  public PageTableEntry(int v, int r, int d, String pfn){
+  public PTEntry(int v, int r, int d, String pfn){
     validBit = v;
     refBit = r;
     dirtyBit = d;
