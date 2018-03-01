@@ -1,8 +1,11 @@
 public class TLBCache{
-  private TLBEntry[] TlbEntries;
+  private TLBEntry[] tlb;
 
   public TLBCache(){
-    TlbEntries = new TLBEntry[8];
+
+  }
+  public TLBEntry getTLBEntry(int index){
+
   }
 }
 
@@ -12,13 +15,12 @@ class TLBEntry{
   private int refBit;
   private int dirtyBit;
   private String pageFrameNum;
-  
+
   public TLBEntry(){
-    virtualPageNum = "";
-    validBit = 0;
-    refBit = 0;
-    dirtyBit = 0;
-    pageFrameNum = "";
+
+  }
+  public TLBEntry(String vpn, int v, int r, int d, String pfn){
+
   }
   public void setVirtualPage(String v){
 
