@@ -14,11 +14,11 @@ public class CPU{
 
   public CPU(){
     //instantiate all private members
-    mmu=new MMU();
-    os=new OS();
-    pt=new VirtualPageTable();
-    pm=new PhysicalMemory(pt);
-    tlb=new TLBCache();
+    mmu = new MMU();
+    os = new OS();
+    pt = new VirtualPageTable();
+    pm = new PhysicalMemory(pt);
+    tlb = new TLBCache();
   }
   //read instructions and pass them to mmu in correct format
   public void readInstructions(String filename){
