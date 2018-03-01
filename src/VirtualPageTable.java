@@ -3,7 +3,7 @@ public class VirtualPageTable{
   //table entry - V | R | D | PageFrame#
 
   public VirtualPageTable(){
-    vpt = new PageTableEntry[16];
+    vpt = new PageTableEntry[64];
   }
   public PageTableEntry getPTE(int index){
     return vpt[index];
