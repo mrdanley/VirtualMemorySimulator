@@ -3,10 +3,13 @@
 //address width is 12 bits
 
 public class PhysicalMemory{
-  private String ram[][];
+  private String [][]  ram;
 
-  //load page files
   public PhysicalMemory(){
-
+    ram = new String[64][];
+    //load 64 page files
+    //with first index as page names
+    //and second index as integer lines within
+    
   }
 }
