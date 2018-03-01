@@ -2,5 +2,7 @@
 //uses the clock algorithm for page replacement (must implement as a circular linked list)
 
 public class OS{
-
+  public void pageReplacement(PhysicalMemory pm){
+    
+  }
 }
