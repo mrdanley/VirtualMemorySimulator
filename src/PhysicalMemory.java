@@ -22,7 +22,7 @@ public class PhysicalMemory{
       pfn = vpn;
       pt.getPTEntries()[i] = new PTEntry(1,0,0,pfn);
       try {
-        FileReader fileReader = new FileReader(new File("/page_files/"+vpn+".pg"));
+        FileReader fileReader = new FileReader(new File("../page_files/"+vpn+".pg"));
         BufferedReader bufferedReader = new BufferedReader(fileReader);
   			StringBuffer stringBuffer = new StringBuffer();
 
@@ -40,10 +40,5 @@ public class PhysicalMemory{
   }
   public int[][] getRam(){
     return ram;
-  }
-  public static void main(String[]args){
-    VirtualPageTable pt = new VirtualPageTable();
-    PhysicalMemory pm = new PhysicalMemory(pt);
-    System.out.println(pm.getRam()[2][3]);
   }
 }
