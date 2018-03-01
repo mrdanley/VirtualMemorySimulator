@@ -1,0 +1,56 @@
+default load:
+
+declare CPU
+CPU declares MMU, OS(manages PT), PM
+PT[virtual page #] = V | R | D | page frame #
+MMU declares TLB(start empty) size 8, MMU sets R and D bits
+tlb[0-7] = virtual page # | V | R | D | page frame #
+OS unsets R and D bits(after every 20 CPU instructions)
+PM pulls page files and their contents into 2-d array 'ram'
+ram[page frame #][# of integer lines in page file AKA AKA page offset]
+
+page frame #'s = physical page #'s = page file names in folder
+
+virtual addresses are 16 bits = virtual page # (8 bits) | page offset ( 8 bits)
+virtual page #'s are indices of page table which hold the page frame #'s
+page frame #'s are indices of 2-d array 'ram' which hold the page filenames/pagenumbers
+(ex. 00,02,03...FC,FD,FE,FF....so alltogether size 16x16=256) and the all their data (seems like size 256)
+
+QUESTION: how do i know which pages to load into ram first
+
+
+process:
+
+1)CPU takes instructions:
+
+2)hand instructions to MMU which either:
+
+a)
+0 -read
+1C85 -from virtual memory address
+MMU sets R bit on TLB and PT
+
+or
+
+b)
+1 - write
+A1B5 -to virtual memory address
+8517174 -this data
+MMU sets R and D on TLB and PT
+
+in this case, MMU sets the dirty bit in TLB and page table to 1.
+Page must be written back to disk if replacing the page file.
+DEFINITION: dirty bit - tells whether data has been written to (1) or not (0)
+
+3)search virtual page # in TLB[0]-TLB[7]
+if found) hit, combine page frame# and offset for physical address
+if NOT found) soft miss, go to (4)
+
+4)search page table[virtual page #] to see if exists
+if found) hit, MMU overwrite TLB entry with page table entry using FIFO
+if NOT FOUND) hard miss, go to (5)
+
+5)if ram[][] has space, search 'disk' aka page files for virtual page # and load to ram, updating page table and tlb cache, go to (3)
+else go to (6)
+
+6) if ram[][] is full, use clock algorithm to choose page to swap out. if dirty bit is set, write page to 'disk' page file, then go to (5)
