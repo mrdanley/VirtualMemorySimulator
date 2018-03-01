@@ -6,4 +6,13 @@ public class CPU{
   private OS os;
   private PhysicalMemory pm;
   private VirtualPageTable pt;
+
+  public CPU(){
+    //instantiate all private members
+
+  }
+  //read instructions and pass them to mmu in correct format
+  public void readInstructions(String filename){
+    
+  }
 }
