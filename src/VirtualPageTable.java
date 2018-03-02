@@ -1,11 +1,10 @@
 public class VirtualPageTable{
   private PTEntry[] ptEntries;
-  private int stackPtr, clockPtr;
+  private int stackPtr;
 
   public VirtualPageTable(){
     ptEntries = new PTEntry[64];
     stackPtr = 0;
-    clockPtr = 0;
   }
   public PTEntry[] getPTEntries(){
     return ptEntries;
@@ -16,12 +15,6 @@ public class VirtualPageTable{
     else{
       return null;
     }
-  }
-  public int getClockPtr(){
-    return clockPtr;
-  }
-  public void setClockPtr(int ptr){
-    clockPtr = ptr;
   }
 }
 

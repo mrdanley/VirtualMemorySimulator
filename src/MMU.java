@@ -1,9 +1,9 @@
 //uses FIFO for replacement algorithm
 //handles virtual page table
 public class MMU{
-  public String read(TLBCache tlb,VirtualPageTable pt,String virtualAddress){
+  public String read(TLBCache tlb,VirtualPageTable pt,String vpn){
     int ptIndex,tlbIndex = tlb.getTLBEntryIndex(vpn);
-    String vpn = virtualAddress.substring(0,2),pageFrame = tlb.getTLBEntry(tlbIndex);
+    String pageFrame = tlb.getTLBEntry(tlbIndex);
     if(pageFrame==null){
       ptIndex = Integer.parseInt(vpn,16);
       pageFrame = pt.getPTEntry(ptIndex).getPageFrame();

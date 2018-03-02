@@ -15,10 +15,10 @@ public class CPU{
   public CPU(){
     //instantiate all private members
     mmu = new MMU();
-    os = new OS();
-    pt = new VirtualPageTable();
-    pm = new PhysicalMemory(pt);
     tlb = new TLBCache();
+    pt = new VirtualPageTable();
+    pm = new PhysicalMemory();
+    os = new OS(pm,pt);
   }
   //read instructions and pass them to mmu in correct format
   public void readInstructions(String filename){
@@ -33,15 +33,21 @@ public class CPU{
 			while ((instruction = bufferedReader.readLine()) != null) {
         //take in next line as vpn
         virtualAddress = bufferedReader.readLine();
+        String vpn = virtualAddress.substring(0,2);
+        int tlbIndex = tlb.getTLBEntryIndex(vpn);
         if(instruction.equals("0")){
-          physicalAddress = mmu.read(tlb,pt,virtualAddress);
-          if(physicalAddress.equals("")){//clock page replacement algorithm
-            os.pageReplacement(pm)
-          }else{//pageframe returned, combine with offset and access ram
-            offset = virtualAddress.substring(2,4);
-            System.out.println("Address "+physicalAddress+offset);
-          }
+          do{
+            physicalAddress = mmu.read(tlb,pt,vpn);
+            if(physicalAddress.equals("")){//clock page replacement algorithm
+              os.pageReplacement(pt,pm,vpn);
+            }else{//pageframe returned, combine with offset and access ram
+              offset = virtualAddress.substring(2,4);
+              System.out.println("Address "+physicalAddress+offset);
+              break;
+            }
+          }while(true);
         }else{//"1" encountered
+        //CONTINUE HEREEEEE
           data = Integer.parseInt(bufferedReader.readLine());
           physicalAddress = mmu.write(tlb,pt,virtualAddress,data);
         }
