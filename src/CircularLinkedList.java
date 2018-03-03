@@ -27,6 +27,7 @@ public class CircularLinkedList{
     Node temp = last.getNext();
     last.setNext(temp.getNext());
     decrCounter();
+    return temp.getData();
   }
   public static int getCounter(){
     return counter;
