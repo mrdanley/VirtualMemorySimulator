@@ -19,6 +19,7 @@ public class VirtualPageTable{
         return ptEntries[i];
       }
     }
+    return null;
   }
   public void setPTEntry(int index,int valid,int ref,int dirty,String pfn){
     ptEntries[index] = new PTEntry(valid,ref,dirty,pfn);
