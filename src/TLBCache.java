@@ -4,12 +4,10 @@ import java.util.HashMap;
 public class TLBCache{
   private final int TLB_SIZE = 8;
   private TLBEntry[] tlbEntries;
-  private int swapPtr;//keeps track of
   private int stackPtr;//keeps track of filled area
 
   public TLBCache(){
     tlbEntries = new TLBEntry[TLB_SIZE];
-    swapPtr = 0;
     stackPtr = 0;
   }
   public int getTLBEntryIndex(String vpn){
@@ -25,22 +23,21 @@ public class TLBCache{
     return -1;
   }
   public TLBEntry getTLBEntry(int index){
-    return tlbEntries[i];
+    if(tlbEntries[index].getValid()==1)
+      return tlbEntries[i];
+    else{
+      return null;
+    }
+
+  }
+  public void setTLBEntry(int index,String vpn,int valid,int ref,int dirty,String pfn){
+    tlbEntries[index] = new TLBEntry(vpn,valid,ref,dirty,pfn);
   }
   public int getStackPtr(){
     return stackPtr;
   }
   public void incrStackPtr(){
     stackPtr++;
-  }
-  public int getSwapPtr(){
-    return swapPtr;
-  }
-  public void setSwapPtr(int ptr){
-    swapPtr = ptr;
-  }
-  public TLBEntry[] getTLBEntries(){
-    return tlbEntries;
   }
   public boolean isFull(){
     if(stackPtr==tlbEntries.length) return true;

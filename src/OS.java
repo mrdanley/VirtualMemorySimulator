@@ -11,7 +11,7 @@ public class OS{
   public OS(){
   }
   public OS(PhysicalMemory pm,VirtualPageTable pt){
-    clock = new LinkedList();//initialize linked list
+    ptIndices = new CircularLinkedList();//initialize linked list
     String vpn,pfn;
     for(int i=0;i<16;i++){
       pfn = (Integer.toHexString(i)).toUpperCase();

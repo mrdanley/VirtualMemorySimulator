@@ -3,11 +3,8 @@ public class VirtualPageTable{
   private int stackPtr;
 
   public VirtualPageTable(){
-    ptEntries = new PTEntry[64];
+    ptEntries = new PTEntry[256];
     stackPtr = 0;
-  }
-  public PTEntry[] getPTEntries(){
-    return ptEntries;
   }
   public PTEntry getPTEntry(int index){
     if(ptEntries[index].getValid()==1)
@@ -15,6 +12,9 @@ public class VirtualPageTable{
     else{
       return null;
     }
+  }
+  public void setPTEntry(int vpnIndexString pfn){
+    ptEntries[vpnIndex] = new PTEntry(1,0,0,pfn);
   }
 }
 
