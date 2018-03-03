@@ -24,7 +24,7 @@ public class TLBCache{
   }
   public TLBEntry getTLBEntry(int index){
     if(tlbEntries[index].getValid()==1)
-      return tlbEntries[i];
+      return tlbEntries[index];
     else{
       return null;
     }

@@ -13,8 +13,15 @@ public class VirtualPageTable{
       return null;
     }
   }
-  public void setPTEntry(int vpnIndexString pfn){
-    ptEntries[vpnIndex] = new PTEntry(1,0,0,pfn);
+  public PTEntry getPTEntry(String pageFrame){
+    for(int i=0;i<ptEntries.length;i++){
+      if(ptEntries[i].getValid()==1 && ptEntries[i].getPageFrame()==pageFrame){
+        return ptEntries[i];
+      }
+    }
+  }
+  public void setPTEntry(int index,int valid,int ref,int dirty,String pfn){
+    ptEntries[index] = new PTEntry(valid,ref,dirty,pfn);
   }
 }
 

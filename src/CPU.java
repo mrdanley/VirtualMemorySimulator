@@ -27,8 +27,8 @@ public class CPU{
       BufferedReader bufferedReader = new BufferedReader(fileReader);
 			StringBuffer stringBuffer = new StringBuffer();
 
-			String instruction,virtualAddress,offset,vpn,pfn;
-      int rBitCounter = 0, tlbIndex;
+			String instruction,virtualAddress,dataString,offset,vpn,pfn;
+      int rBitCounter = 0,tlbIndex,ptIndex,ramIndex;
       //read in all contents of testfile
 			while ((instruction = bufferedReader.readLine()) != null) {
         //take in next line as vpn
@@ -60,8 +60,9 @@ public class CPU{
               }else{//hard miss
                 ramIndex = os.clockAlgorithm(pt);
                 if(mmu.checkDirty(pt,ramIndex)){
-                  os.writeRamPageToDisk(pm,ramIndex);
+                  os.writeRamPageToDisk(pm,ramIndex,vpn);
                 }
+                //set PT[index] to null
                 os.writeDiskPageToRam(pm,pt,ramIndex,vpn);
               }
             }
@@ -75,7 +76,7 @@ public class CPU{
             if(tlbIndex != -1){//hit
               mmu.setRef(tlb,pt,tlbIndex);
               //OS write data to ram[PT[vpn]][offset]
-              pfn = tlb.geTLBEntry(Integer.parseInt(vpn,16)).getPageFrame();
+              pfn = tlb.getTLBEntry(Integer.parseInt(vpn,16)).getPageFrame();
               ramIndex = Integer.parseInt(pfn,16);
               os.writeToRamPage(pm,ramIndex,dataString,offset);
               //set dirty bit
@@ -93,7 +94,7 @@ public class CPU{
                   tlb.incrStackPtr();
                 }
                 mmu.copyFromPTtoTLB(tlb,pt,tlbIndex,ptIndex);
-                pfn = tlb.geTLBEntry(tlbIndex).getPageFrame();
+                pfn = tlb.getTLBEntry(tlbIndex).getPageFrame();
                 ramIndex = Integer.parseInt(pfn,16);
                 os.writeToRamPage(pm,ramIndex,dataString,offset);
                 //set dirty bit
@@ -103,8 +104,9 @@ public class CPU{
               }else{//hard miss
                 ramIndex = os.clockAlgorithm(pt);
                 if(mmu.checkDirty(pt,ramIndex)){
-                  os.writeRamPageToDisk(pm,ramIndex);
+                  os.writeRamPageToDisk(pm,ramIndex,vpn);
                 }
+                //set PT[index] to null
                 os.writeDiskPageToRam(pm,pt,ramIndex,vpn);
               }
             }

@@ -1,8 +1,10 @@
 //resets the r-bit every 20 instructions
 //uses the clock algorithm for page replacement (must implement as a circular linked list)
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class OS{
@@ -15,7 +17,7 @@ public class OS{
     String vpn,pfn;
     for(int i=0;i<16;i++){
       pfn = (Integer.toHexString(i)).toUpperCase();
-      pt.getPTEntries(i) = new PTEntry(1,0,0,pfn);
+      pt.setPTEntry(i,1,0,0,pfn);
       //add 0 because hex 0-15 is 0-F, need 4 more bits for 8 bit vpn
       vpn = "0" + pfn;
       loadPage(i,vpn,pm);
@@ -28,7 +30,7 @@ public class OS{
     boolean notFound = true;
     int currentIndex;
     do{
-      currentIndex = ptIndices.getNext();
+      currentIndex = ptIndices.getNext().getData();
       if(pt.getPTEntry(currentIndex).getRef()==1){
         pt.getPTEntry(currentIndex).setRef(0);
       }else{
@@ -36,18 +38,16 @@ public class OS{
       }
     }while(true);
   }
-  public void writeRamPageToDisk(PhysicalMemory pm,int ramIndex){
-    String diskPageName = Integer.toHexString(ramIndex);
-    if(ramWriteOut.length()==1) ramWriteOut = "0"+ ramWriteOut;
+  public void writeRamPageToDisk(PhysicalMemory pm,int ramIndex,String vpn){
     try {
-      FileWriter fileWriter = new FileWriter(new File("../page_files/"+diskPageName+".pg"),false);
+      FileWriter fileWriter = new FileWriter(new File("../page_files/"+vpn+".pg"),false);
       BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
       StringBuffer dataString = new StringBuffer("");
-      for(int i=0;i<pm.getRam(ramIndex).length;i++){
-        dataString.append(pm.getRam(ramIndex)[i]+"\n");
+      for(int i=0;i<pm.getRamPage(ramIndex).length;i++){
+        dataString.append(pm.getRamPage(ramIndex)[i]+"\n");
       }
       bufferedWriter.write(dataString.toString());
-      bufferedWriter.close()
+      bufferedWriter.close();
       fileWriter.close();
     }catch (IOException e) {
       e.printStackTrace();
@@ -63,7 +63,7 @@ public class OS{
       int pageLineIndex = 0;
       //read in all contents of testfile
       while ((dataString = bufferedReader.readLine()) != null) {
-        pm.getRam(ramIndex)[pageLineIndex++] = Integer.parseInt(dataString);
+        pm.getRamPage(ramIndex)[pageLineIndex++] = Integer.parseInt(dataString);
       }
       bufferedReader.close();
       fileReader.close();
@@ -86,7 +86,7 @@ public class OS{
       int pageLineIndex = 0;
       //read in all contents of testfile
       while ((dataString = bufferedReader.readLine()) != null) {
-        pm.getRam(ramIndex)[pageLineIndex++] = Integer.parseInt(dataString);
+        pm.getRamPage(ramIndex)[pageLineIndex++] = Integer.parseInt(dataString);
       }
       bufferedReader.close();
       fileReader.close();
@@ -95,15 +95,17 @@ public class OS{
     }
   }
   public void writeToRamPage(PhysicalMemory pm,int ramIndex,String dataString,String offset){
-    pm.getRam(ramIndex)[offset] = Integer.parseInt(dataString);
+    pm.getRamPage(ramIndex)[Integer.parseInt(offset,16)] = Integer.parseInt(dataString);
   }
   public void resetRefBit(TLBCache tlb,VirtualPageTable pt){
     for(int i=0;i<tlb.getStackPtr();i++){
       tlb.getTLBEntry(i).setRef(0);
     }
+
+    Node ptIndexCurrent = ptIndices.getNext();
     for(int i=0;i<ptIndices.getCounter();i++){
-      pt.getPTEntry(ptIndices.getData()).setRef(0);
-      ptIndices = ptIndices.getNext();
+      pt.getPTEntry(ptIndexCurrent.getData()).setRef(0);
+      ptIndexCurrent = ptIndices.getNext();
     }
   }
 }

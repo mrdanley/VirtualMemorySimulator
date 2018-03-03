@@ -3,12 +3,12 @@ public class LinkedList{
   private static int counter;
 
   public LinkedList(){
-    head = new Node(null);
+    head = new Node(-1);
     counter = 0;
   }
   public void add(int index){
     if(counter==0){
-      head = new Node(data);
+      head = new Node(index);
       incrCounter();
       return;
     }

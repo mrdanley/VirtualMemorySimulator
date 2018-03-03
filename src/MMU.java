@@ -2,6 +2,7 @@
 //handles virtual page table
 public class MMU{
   private LinkedList tlbIndices;
+
   public MMU(){
     tlbIndices = new LinkedList();
   }
@@ -16,12 +17,12 @@ public class MMU{
     tlb.getTLBEntry(index).setDirty(1);
     pt.getPTEntry(index).setDirty(1);
   }
-  public int checkPT(TLBCache tlb,String vpn){
-    ptIndex = Integer.parseInt(vpn,16);
+  public int checkPT(VirtualPageTable pt,String vpn){
+    int ptIndex = Integer.parseInt(vpn,16);
     int valid = pt.getPTEntry(ptIndex).getValid();
     if(valid==1){
       return ptIndex;
-    }els{
+    }else{
       return -1;
     }
   }
@@ -32,16 +33,19 @@ public class MMU{
     return tlbIndices.removeHead();
   }
   public void copyFromPTtoTLB(TLBCache tlb,VirtualPageTable pt,int tlbIndex,int ptIndex){
-    String vpn = Integer.toHextString(ptIndex,16);
+    String vpn = Integer.toHexString(ptIndex);
     if(vpn.length()==1) vpn = "0"+vpn;
     tlb.setTLBEntry(tlbIndex,vpn,pt.getPTEntry(ptIndex).getValid(),
                                 pt.getPTEntry(ptIndex).getRef(),
                                 pt.getPTEntry(ptIndex).getDirty(),
                                 pt.getPTEntry(ptIndex).getPageFrame());
-    ptIndices.add(tlbIndex);
+    tlbIndices.add(tlbIndex);
   }
   public boolean checkDirty(VirtualPageTable pt,int ramIndex){
-    if(pt.getPTEntry(Integer.parseInt(ramIndex,16)).getDirty()==1){
+    String pfn = Integer.toHexString(ramIndex);
+    if(pfn.length()==1) pfn = "0"+pfn;
+
+    if(pt.getPTEntry(pfn).getDirty()==1){
       return true;
     }else{
       return false;

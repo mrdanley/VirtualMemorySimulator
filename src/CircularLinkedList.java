@@ -2,8 +2,8 @@ public class CircularLinkedList{
   private Node last;
   private static int counter;
 
-  public LinkedList(){
-    last = new Node(null);
+  public CircularLinkedList(){
+    last = new Node(-1);
     counter = 0;
   }
   public void add(int index){
@@ -15,26 +15,26 @@ public class CircularLinkedList{
     }
 
     Node temp = new Node(index);
-    temp.setNext() = last.getNext();
-    last.setNext() = temp;
+    temp.setNext(last.getNext());
+    last.setNext(temp);
     last = temp;
     incrCounter();
   }
-  public int getNext(){
-    return last.getNext().getData();
+  public Node getNext(){
+    return last.getNext();
   }
   public int remove(){
     Node temp = last.getNext();
-    last.setNext() = temp.getNext();
+    last.setNext(temp.getNext());
     decrCounter();
   }
-  private static int getCounter(){
+  public static int getCounter(){
     return counter;
   }
-  private static void incrCounter(){
+  public static void incrCounter(){
     counter++;
   }
-  private static void decrCounter(){
+  public static void decrCounter(){
     counter--;
   }
 }
