@@ -3,19 +3,11 @@
 
 public class PhysicalMemory{
   private int [][] ram;
-  private int clockPtr;
 
   public PhysicalMemory(){
     ram = new int[16][256];
-    clockPtr = 0;
   }
-  public int[][] getRam(){
-    return ram;
-  }
-  public int getClockPtr(){
-    return clockPtr;
-  }
-  public void setClockPtr(int index){
-    clockPtr = index;
+  public int[] getRamPage(int index){
+    return ram[index];
   }
 }
