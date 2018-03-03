@@ -1,35 +1,50 @@
 //uses FIFO for replacement algorithm
 //handles virtual page table
 public class MMU{
-  public String read(TLBCache tlb,VirtualPageTable pt,String vpn){
-    int ptIndex,tlbIndex = tlb.getTLBEntryIndex(vpn);
-    String pageFrame = tlb.getTLBEntry(tlbIndex);
-    if(pageFrame==null){
-      ptIndex = Integer.parseInt(vpn,16);
-      pageFrame = pt.getPTEntry(ptIndex).getPageFrame();
-      if(pageFrame==null){//hard miss
-        System.out.println("Hard miss");
-        //os will do clock page replacement algorithm
-      }else{//soft miss
-        System.out.println("Soft miss");
-        System.out.println("Hit");
-        if(tlb.isFull()){
-          //fifo replacement algorithm
-        }else{
-          //set page table entry reference bit to 1
-          pt.getPTEntry(ptIndex).setRef(1);
-          //add entry from page table to tlb
-          tlb.getTLBEntries()[tlb.getStackPtr()] = new TLBEntry(vpn,1,1,0,pageFrame);
-          tlb.incrStackPtr();
-        }
-      }
-    }else{
-      System.out.println("Hit");
-      tlb.getTLBEntry(tlbIndex).setRef(1);
-    }
-    return pageFrame;
+  private LinkedList tlbIndices;
+  public MMU(){
+    tlbIndices = new LinkedList();
   }
-  public String write(TLBCache tlb,VirtualPageTable pt,String vpn,int data){
-    return "";
+  public int checkTLB(TLBCache tlb,String vpn){
+    return tlb.getTLBEntryIndex(vpn);
+  }
+  public void setRef(TLBCache tlb,VirtualPageTable pt,int index){
+    tlb.getTLBEntry(index).setRef(1);
+    pt.getPTEntry(index).setRef(1);
+  }
+  public void setDirty(TLBCache tlb,VirtualPageTable pt,int index){
+    tlb.getTLBEntry(index).setDirty(1);
+    pt.getPTEntry(index).setDirty(1);
+  }
+  public int checkPT(TLBCache tlb,String vpn){
+    ptIndex = Integer.parseInt(vpn,16);
+    int valid = pt.getPTEntry(ptIndex).getValid();
+    if(valid==1){
+      return ptIndex;
+    }els{
+      return -1;
+    }
+  }
+  public void setRef(VirtualPageTable pt,int index){
+    pt.getPTEntry(index).setRef(1);
+  }
+  public int fifo(){
+    return tlbIndices.removeHead();
+  }
+  public void copyFromPTtoTLB(TLBCache tlb,VirtualPageTable pt,int tlbIndex,int ptIndex){
+    String vpn = Integer.toHextString(ptIndex,16);
+    if(vpn.length()==1) vpn = "0"+vpn;
+    tlb.setTLBEntry(tlbIndex,vpn,pt.getPTEntry(ptIndex).getValid(),
+                                pt.getPTEntry(ptIndex).getRef(),
+                                pt.getPTEntry(ptIndex).getDirty(),
+                                pt.getPTEntry(ptIndex).getPageFrame());
+    ptIndices.add(tlbIndex);
+  }
+  public boolean checkDirty(VirtualPageTable pt,int ramIndex){
+    if(pt.getPTEntry(Integer.parseInt(ramIndex,16)).getDirty()==1){
+      return true;
+    }else{
+      return false;
+    }
   }
 }
