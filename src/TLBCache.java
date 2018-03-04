@@ -8,7 +8,16 @@ public class TLBCache{
 
   public TLBCache(){
     tlbEntries = new TLBEntry[TLB_SIZE];
+    for(int i=0;i<tlbEntries.length;i++){
+      tlbEntries[i] = new TLBEntry();
+    }
     stackPtr = 0;
+  }
+  public void printTable(){
+    for(int i=0;i<TLB_SIZE;i++){
+      System.out.print("Index "+i+" ");
+      tlbEntries[i].printEntry();
+    }
   }
   public int getTLBEntryIndex(String vpn){
     for(int i=0;i<stackPtr;i++){
@@ -65,6 +74,9 @@ class TLBEntry{
     refBit = r;
     dirtyBit = d;
     pageFrameNum = pfn;
+  }
+  public void printEntry(){
+    System.out.println(virtualPageNum+" "+validBit+" "+refBit+" "+dirtyBit+" "+pageFrameNum);
   }
   public void setVirtualPage(String v){
     virtualPageNum = v;

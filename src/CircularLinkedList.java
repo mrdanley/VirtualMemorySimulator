@@ -1,31 +1,37 @@
 public class CircularLinkedList{
-  private Node last;
+  private Node head,tail;
   private static int counter;
 
   public CircularLinkedList(){
-    last = new Node(-1);
+    head = null;
+    tail = null;
     counter = 0;
   }
   public void add(int index){
     if(counter==0){
-      last = new Node(index);
-      last.setNext(last);
+      head = new Node(index);
+      tail = head;
+      head.setNext(tail);
       incrCounter();
       return;
     }
 
     Node temp = new Node(index);
-    temp.setNext(last.getNext());
-    last.setNext(temp);
-    last = temp;
+    tail.setNext(temp);
+    temp.setNext(head);
+    tail = temp;
     incrCounter();
   }
-  public Node getNext(){
-    return last.getNext();
+  public Node getHead(){
+    return head;
+  }
+  public Node getTail(){
+    return tail;
   }
   public int remove(){
-    Node temp = last.getNext();
-    last.setNext(temp.getNext());
+    Node temp = head;
+    head = head.getNext();
+    tail.setNext(head);
     decrCounter();
     return temp.getData();
   }

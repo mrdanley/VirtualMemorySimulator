@@ -1,34 +1,34 @@
 public class LinkedList{
   private Node head;
+  private Node tail;
   private static int counter;
 
   public LinkedList(){
     head = new Node(-1);
+    tail = head;
     counter = 0;
   }
   public void add(int index){
     if(counter==0){
       head = new Node(index);
+      tail = head;
       incrCounter();
       return;
     }
 
     Node temp = new Node(index);
-    Node current = head;
-
-    while(current.getNext() != null){
-      current = current.getNext();
-    }
-
-    current.setNext(temp);
-    incrCounter();
+    tail.setNext(temp);
+    tail = temp;
+    if(counter<8) incrCounter();
   }
   public int removeHead(){
-    Node oldHead = head;
-    this.head = head.getNext();
+    Node oldHead = new Node(head.getData());
+    tail.setNext(oldHead);
+    tail = oldHead;
+    head = head.getNext();
     return oldHead.getData();
   }
-  private static int getCounter(){
+  public static int getCounter(){
     return counter;
   }
   private static void incrCounter(){

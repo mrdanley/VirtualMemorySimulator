@@ -4,22 +4,31 @@ public class VirtualPageTable{
 
   public VirtualPageTable(){
     ptEntries = new PTEntry[256];
+    for(int i=0;i<ptEntries.length;i++){
+      ptEntries[i] = new PTEntry();
+    }
     stackPtr = 0;
   }
-  public PTEntry getPTEntry(int index){
-    if(ptEntries[index].getValid()==1)
-      return ptEntries[index];
-    else{
-      return null;
-    }
-  }
-  public PTEntry getPTEntry(String pageFrame){
+  public void printTable(){
     for(int i=0;i<ptEntries.length;i++){
-      if(ptEntries[i].getValid()==1 && ptEntries[i].getPageFrame()==pageFrame){
-        return ptEntries[i];
+      if(ptEntries[i].getValid()==1){
+        String vpn = Integer.toHexString(i).toUpperCase();
+        if(vpn.length()==1) vpn="0"+vpn;
+        System.out.print("Index "+vpn+" ");
+        ptEntries[i].printEntry();
       }
     }
-    return null;
+  }
+  public PTEntry getPTEntry(int index){
+    return ptEntries[index];
+  }
+  public int getPTEntryIndex(String pfn){
+    for(int i=0;i<ptEntries.length;i++){
+      if(ptEntries[i].getValid()==1 && ptEntries[i].getPageFrame().equals(pfn)){
+        return i;
+      }
+    }
+    return -1;
   }
   public void setPTEntry(int index,int valid,int ref,int dirty,String pfn){
     ptEntries[index] = new PTEntry(valid,ref,dirty,pfn);
@@ -40,6 +49,9 @@ class PTEntry{
     refBit = r;
     dirtyBit = d;
     pageFrameNum = pfn;
+  }
+  public void printEntry(){
+    System.out.println(validBit+" "+refBit+" "+dirtyBit+" "+pageFrameNum);
   }
   public void setValid(int v){
     validBit = v;
