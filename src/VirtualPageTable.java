@@ -18,6 +18,7 @@ public class VirtualPageTable{
         ptEntries[i].printEntry();
       }
     }
+    System.out.println();
   }
   public PTEntry getPTEntry(int index){
     return ptEntries[index];

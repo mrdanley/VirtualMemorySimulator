@@ -106,11 +106,8 @@ public class OS{
     for(int i=0;i<tlb.getStackPtr();i++){
       tlb.getTLBEntry(i).setRef(0);
     }
-    System.out.println("Reset with "+ptIndices.getCounter());
-    Node ptIndexCurrent = ptIndices.getHead();
-    do{
-      pt.getPTEntry(ptIndexCurrent.getData()).setRef(0);
-      ptIndexCurrent = ptIndexCurrent.getNext();
-    }while(ptIndexCurrent != ptIndices.getHead());
+    for(int i=0;i<256;i++){
+      pt.getPTEntry(i).setRef(0);
+    }
   }
 }

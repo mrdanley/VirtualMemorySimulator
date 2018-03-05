@@ -18,6 +18,7 @@ public class TLBCache{
       System.out.print("Index "+i+" ");
       tlbEntries[i].printEntry();
     }
+    System.out.println();
   }
   public int getTLBEntryIndex(String vpn){
     for(int i=0;i<stackPtr;i++){
