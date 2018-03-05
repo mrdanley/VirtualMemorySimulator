@@ -73,6 +73,9 @@ public class CPU{
         vpn = virtualAddress.substring(0,2);
         offset = virtualAddress.substring(2);
 
+        soft="0";
+        hard="0";
+        hit="0";
         if(!dirtyPage.equals("1")) dirtyPage="0";//if hasnt been set to 1, default value is 0
         evictedPage = "None";
         if(rw.equals("0")){
@@ -85,9 +88,9 @@ public class CPU{
             if(tlbIndex != -1){//hit
               System.out.println("Hit");
 
-              if(!soft.equals("1") && !hard.equals("1")){
-                soft="0";
-                hard="0";
+              if(soft.equals("1") || hard.equals("1")){
+                hit="0";
+              }else{
                 hit="1";
               }
 
@@ -166,9 +169,9 @@ public class CPU{
             if(tlbIndex != -1){//hit
               System.out.println("Hit");
 
-              if(!soft.equals("1") && !hard.equals("1")){
-                soft="0";
-                hard="0";
+              if(soft.equals("1") || hard.equals("1")){
+                hit="0";
+              }else{
                 hit="1";
               }
 
